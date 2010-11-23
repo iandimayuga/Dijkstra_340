@@ -10,13 +10,15 @@ import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
 
-import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.graph.Forest;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import edu.uci.ics.jung.visualization.renderers.DefaultEdgeLabelRenderer;
+import edu.uci.ics.jung.visualization.renderers.EdgeLabelRenderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 
 public final class Display
@@ -32,13 +34,21 @@ public final class Display
 	 * @param vHigh A set of vertices you'd like highlighted in a color different from both "finalized" and "unfinalized."
 	 * @param eHigh A set of edges you'd like highlighted. Good for "best path" highlighting.
 	 */
+	@SuppressWarnings( { "rawtypes", "unchecked" })
 	public static void print( Graph<Vertex, Edge> g, Forest<Vertex, Edge> f, final LinkedList<Vertex> vHigh, final LinkedList<Edge> eHigh)
 	{
 		Transformer<Vertex, Paint> vPaint = new Transformer<Vertex, Paint>()
 		{
 			public Paint transform( Vertex v)
 			{
-				return vHigh.contains( v) ? Color.yellow : Color.red;
+				if(vHigh.contains( v))
+				{
+					return Color.yellow;
+				} else if(v.isFinal()) {
+					return Color.green;
+				} else {
+					return Color.red;
+				}
 			}
 		};
 		
@@ -50,8 +60,10 @@ public final class Display
 			}
 		};
 		
+		EdgeLabelRenderer eRend = new DefaultEdgeLabelRenderer(Color.red, false);
+		
 		//left side
-		Layout<Vertex, Edge> graph = new CircleLayout<Vertex, Edge>( g);
+		Layout<Vertex, Edge> graph = new ISOMLayout<Vertex, Edge>( g);
 		graph.setSize( new Dimension( 600, 600));
 		
 		BasicVisualizationServer<Vertex, Edge> left = new BasicVisualizationServer<Vertex, Edge>( graph);
@@ -61,10 +73,11 @@ public final class Display
 		left.getRenderContext().setEdgeDrawPaintTransformer( ePaint);
 		left.getRenderContext().setVertexLabelTransformer( new ToStringLabeller());
 		left.getRenderContext().setEdgeLabelTransformer( new ToStringLabeller());
+		left.getRenderContext().setEdgeLabelRenderer(eRend);
 		left.getRenderer().getVertexLabelRenderer().setPosition( Position.CNTR);
 		
 		//right side
-		Layout<Vertex, Edge> tree = new TreeLayout<Vertex, Edge>( f, 200, 100);
+		Layout<Vertex, Edge> tree = new TreeLayout<Vertex, Edge>( f);
 		
 		BasicVisualizationServer<Vertex, Edge> right = new BasicVisualizationServer<Vertex, Edge>( tree);
 		right.setPreferredSize( new Dimension( 700, 700));
@@ -73,6 +86,7 @@ public final class Display
 		right.getRenderContext().setEdgeDrawPaintTransformer( ePaint);
 		right.getRenderContext().setVertexLabelTransformer( new ToStringLabeller());
 		right.getRenderContext().setEdgeLabelTransformer( new ToStringLabeller());
+		right.getRenderContext().setEdgeLabelRenderer(eRend);
 		right.getRenderer().getVertexLabelRenderer().setPosition( Position.CNTR);
 		
 		//frame

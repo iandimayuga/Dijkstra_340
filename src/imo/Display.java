@@ -1,21 +1,91 @@
 package imo;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Paint;
 import java.util.LinkedList;
 
-import edu.uci.ics.jung.graph.Graph;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-public class Display
+import org.apache.commons.collections15.Transformer;
+
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.algorithms.layout.TreeLayout;
+import edu.uci.ics.jung.graph.Forest;
+import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.visualization.BasicVisualizationServer;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
+
+public final class Display
 {
+	private Display()
+	{ //cannot instantiate
+	}
 	
 	/**
-	 * Displays two graphs, side by side.
-	 * @param g1 The first graph, displayed in traditional layout
-	 * @param g2 The second graph, displayed as a tree.
+	 * Displays a graph and a tree, side by side.
+	 * @param g The graph, displayed in traditional layout
+	 * @param f The tree, displayed as a tree.
 	 * @param vHigh A set of vertices you'd like highlighted in a color different from both "finalized" and "unfinalized."
 	 * @param eHigh A set of edges you'd like highlighted. Good for "best path" highlighting.
 	 */
-	public void print( Graph g1, Graph g2, LinkedList<Vertex> vHigh, LinkedList<Edge> eHigh)
+	public static void print( Graph<Vertex, Edge> g, Forest<Vertex, Edge> f, final LinkedList<Vertex> vHigh, final LinkedList<Edge> eHigh)
 	{
+		Transformer<Vertex, Paint> vPaint = new Transformer<Vertex, Paint>()
+		{
+			public Paint transform( Vertex v)
+			{
+				return vHigh.contains( v) ? Color.yellow : Color.red;
+			}
+		};
 		
+		Transformer<Edge, Paint> ePaint = new Transformer<Edge, Paint>()
+		{
+			public Paint transform( Edge e)
+			{
+				return eHigh.contains( e) ? Color.red : Color.black;
+			}
+		};
+		
+		//left side
+		Layout<Vertex, Edge> graph = new CircleLayout<Vertex, Edge>( g);
+		graph.setSize( new Dimension( 600, 600));
+		
+		BasicVisualizationServer<Vertex, Edge> left = new BasicVisualizationServer<Vertex, Edge>( graph);
+		left.setPreferredSize( new Dimension( 700, 700));
+		
+		left.getRenderContext().setVertexFillPaintTransformer( vPaint);
+		left.getRenderContext().setEdgeDrawPaintTransformer( ePaint);
+		left.getRenderContext().setVertexLabelTransformer( new ToStringLabeller());
+		left.getRenderContext().setEdgeLabelTransformer( new ToStringLabeller());
+		left.getRenderer().getVertexLabelRenderer().setPosition( Position.CNTR);
+		
+		//right side
+		Layout<Vertex, Edge> tree = new TreeLayout<Vertex, Edge>( f, 200, 100);
+		
+		BasicVisualizationServer<Vertex, Edge> right = new BasicVisualizationServer<Vertex, Edge>( tree);
+		right.setPreferredSize( new Dimension( 700, 700));
+		
+		right.getRenderContext().setVertexFillPaintTransformer( vPaint);
+		right.getRenderContext().setEdgeDrawPaintTransformer( ePaint);
+		right.getRenderContext().setVertexLabelTransformer( new ToStringLabeller());
+		right.getRenderContext().setEdgeLabelTransformer( new ToStringLabeller());
+		right.getRenderer().getVertexLabelRenderer().setPosition( Position.CNTR);
+		
+		//frame
+		JPanel panel = new JPanel();
+		panel.add( left);
+		panel.add( right);
+		left.setLocation( 0, 0);
+		right.setLocation( 700, 0);
+		
+		JFrame frame = new JFrame( "Dijkstra's Algorithm");
+		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().add( panel);
+		frame.pack();
+		frame.setVisible( true);
 	}
 }

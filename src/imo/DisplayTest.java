@@ -1,11 +1,12 @@
 package imo;
 
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 
 import edu.uci.ics.jung.graph.DelegateTree;
+import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.Forest;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.SparseGraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 
 public class DisplayTest
@@ -13,8 +14,9 @@ public class DisplayTest
 	
 	/**
 	 * @param args
+	 * @throws FileNotFoundException 
 	 */
-	public static void main( String[] args)
+	public static void main( String[] args) throws FileNotFoundException
 	{
 		
 		Vertex vA = new Vertex( "A");
@@ -24,14 +26,14 @@ public class DisplayTest
 		Edge eAC = new Edge( 8);
 		Edge eBC = new Edge( 29);
 		
-		Graph<Vertex, Edge> g = new SparseGraph<Vertex, Edge>();
+		Graph<Vertex, Edge> g = new DirectedSparseGraph<Vertex, Edge>();
 		
 		g.addVertex( vA);
 		g.addVertex( vB);
 		g.addVertex( vC);
-		g.addEdge( eAB, vA, vB, EdgeType.DIRECTED);
-		g.addEdge( eAC, vA, vC, EdgeType.DIRECTED);
-		g.addEdge( eBC, vB, vC, EdgeType.DIRECTED);
+		g.addEdge( eAB, vA, vB);
+		g.addEdge( eAC, vA, vC);
+		g.addEdge( eBC, vB, vC);
 		
 		Forest<Vertex, Edge> f = new DelegateTree<Vertex, Edge>();
 		
@@ -46,7 +48,7 @@ public class DisplayTest
 		vHigh.add( vC);
 		eHigh.add( eAC);
 		
-		Graph<Vertex, Edge> rg = GraphGen.getGraph(25, 1, 10, 0);
+		Graph<Vertex, Edge> rg = GraphGen.getGraph("resources/testgraph.csv");
 		
 		Display.print( rg, f, vHigh, eHigh);
 	}

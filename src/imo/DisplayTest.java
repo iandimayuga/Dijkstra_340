@@ -16,6 +16,7 @@ public class DisplayTest
 	 */
 	public static void main( String[] args)
 	{
+		
 		Vertex vA = new Vertex( "A");
 		Vertex vB = new Vertex( "B");
 		Vertex vC = new Vertex( "C");
@@ -45,7 +46,9 @@ public class DisplayTest
 		vHigh.add( vC);
 		eHigh.add( eAC);
 		
-		Display.print( g, f, vHigh, eHigh);
+		Graph<Vertex, Edge> rg = GraphGen.getGraph(25, 1, 10, 0);
+		
+		Display.print( rg, f, vHigh, eHigh);
 	}
 	
 }

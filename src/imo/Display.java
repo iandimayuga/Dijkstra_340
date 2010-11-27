@@ -3,14 +3,14 @@ package imo;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Paint;
-import java.util.LinkedList;
+import java.util.Collection;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
 
-import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.graph.Forest;
@@ -35,7 +35,7 @@ public final class Display
 	 * @param eHigh A set of edges you'd like highlighted. Good for "best path" highlighting.
 	 */
 	@SuppressWarnings( { "rawtypes", "unchecked" })
-	public static void print( Graph<Vertex, Edge> g, Forest<Vertex, Edge> f, final LinkedList<Vertex> vHigh, final LinkedList<Edge> eHigh)
+	public static void print( Graph<Vertex, Edge> g, Forest<Vertex, Edge> f, final Collection<Vertex> vHigh, final Collection<Edge> eHigh)
 	{
 		Transformer<Vertex, Paint> vPaint = new Transformer<Vertex, Paint>()
 		{
@@ -63,11 +63,11 @@ public final class Display
 		EdgeLabelRenderer eRend = new DefaultEdgeLabelRenderer(Color.red, false);
 		
 		//left side
-		Layout<Vertex, Edge> graph = new ISOMLayout<Vertex, Edge>( g);
-		graph.setSize( new Dimension( 600, 600));
+		Layout<Vertex, Edge> graph = new FRLayout<Vertex, Edge>( g);
+		graph.setSize( new Dimension( 500, 500));
 		
 		BasicVisualizationServer<Vertex, Edge> left = new BasicVisualizationServer<Vertex, Edge>( graph);
-		left.setPreferredSize( new Dimension( 700, 700));
+		left.setPreferredSize( new Dimension( 600, 600));
 		
 		left.getRenderContext().setVertexFillPaintTransformer( vPaint);
 		left.getRenderContext().setEdgeDrawPaintTransformer( ePaint);
@@ -80,7 +80,7 @@ public final class Display
 		Layout<Vertex, Edge> tree = new TreeLayout<Vertex, Edge>( f);
 		
 		BasicVisualizationServer<Vertex, Edge> right = new BasicVisualizationServer<Vertex, Edge>( tree);
-		right.setPreferredSize( new Dimension( 700, 700));
+		right.setPreferredSize( new Dimension( 600, 600));
 		
 		right.getRenderContext().setVertexFillPaintTransformer( vPaint);
 		right.getRenderContext().setEdgeDrawPaintTransformer( ePaint);
@@ -94,7 +94,7 @@ public final class Display
 		panel.add( left);
 		panel.add( right);
 		left.setLocation( 0, 0);
-		right.setLocation( 700, 0);
+		right.setLocation( 600, 0);
 		
 		JFrame frame = new JFrame( "Dijkstra's Algorithm");
 		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE);

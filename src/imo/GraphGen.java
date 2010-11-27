@@ -100,7 +100,7 @@ public final class GraphGen
 	 */
 	public static Graph<Vertex, Edge> getGraph( String file) throws FileNotFoundException
 	{
-		Scanner scan = new Scanner(new FileReader(file)).useDelimiter("\\s");
+		Scanner scan = new Scanner(new FileReader(file)).useDelimiter("\\n");
 		String first = scan.next().trim();
 		String[] fArray = first.split(",");
 		

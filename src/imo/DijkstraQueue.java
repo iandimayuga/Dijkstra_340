@@ -13,5 +13,22 @@ public class DijkstraQueue {
 	public void DijkstraQueue(Collection<Vertex> vertices){
 		this.pQueue.addAll(vertices);
 	}
+	
+	public void add(Vertex newV){
+		pQueue.add(newV);
+	}
+	
+	public void remove(int i){
+		pQueue.remove();
+	}
+	
+	public boolean hasMore(){
+		return !pQueue.isEmpty();
+	}
+	
+	public void update(Vertex changeV){
+		pQueue.remove(changeV);
+		pQueue.add(changeV);
+	}
 
 }

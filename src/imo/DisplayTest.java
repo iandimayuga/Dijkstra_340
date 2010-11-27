@@ -1,5 +1,6 @@
 package imo;
 
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 
 import edu.uci.ics.jung.graph.DelegateTree;
@@ -13,8 +14,9 @@ public class DisplayTest
 	
 	/**
 	 * @param args
+	 * @throws FileNotFoundException 
 	 */
-	public static void main( String[] args)
+	public static void main( String[] args) throws FileNotFoundException
 	{
 		
 		Vertex vA = new Vertex( "A");
@@ -46,9 +48,9 @@ public class DisplayTest
 		vHigh.add( vC);
 		eHigh.add( eAC);
 		
-		Graph<Vertex, Edge> rg = GraphGen.getGraph(25, 1, 10, 0);
+		Graph<Vertex, Edge> rg = GraphGen.getGraph("resources/testgraph.csv");
 		
-		Display.print( g, f, vHigh, eHigh);
+		Display.print( rg, f, vHigh, eHigh);
 	}
 	
 }

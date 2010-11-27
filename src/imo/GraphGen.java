@@ -124,7 +124,11 @@ public final class GraphGen
 			}
 			for(int j = 0; j < numV; j++)
 			{
-				mat[i][j] = Integer.parseInt(raw[j]);
+				try{
+					mat[i][j] = Integer.parseInt(raw[j]);
+				} catch( NumberFormatException e) {
+					mat[i][j] = -1; //just ignore an invalid edge
+				}
 			}
 		}
 		

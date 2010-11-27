@@ -4,6 +4,7 @@ public class Vertex
 {
 	private String m_Name;
 	private boolean m_Final;
+	private Integer distance = Constants.infinity;
 	
 	public Vertex( String name)
 	{

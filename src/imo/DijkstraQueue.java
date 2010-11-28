@@ -10,16 +10,19 @@ public class DijkstraQueue {
 	private PriorityQueue<Vertex> pQueue = new PriorityQueue<Vertex>(10, comparator);
 	
 	//When creating the queue collect all Vertices and add them to pQueue
-	public void DijkstraQueue(Collection<Vertex> vertices){
+	public DijkstraQueue(Collection<Vertex> vertices){
 		this.pQueue.addAll(vertices);
 	}
 	
+	/*Add a vertex to the queue, PriorityQueue automatically handles
+	adding it to the correct spot*/
 	public void add(Vertex newV){
 		pQueue.add(newV);
 	}
 	
-	public void remove(int i){
-		pQueue.remove();
+	//This removes and returns the head of the queue
+	public Vertex remove(){
+		return pQueue.poll();
 	}
 	
 	public boolean hasMore(){

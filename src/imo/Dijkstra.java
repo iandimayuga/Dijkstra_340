@@ -33,9 +33,10 @@ public class Dijkstra {
 			Collection<Edge> edges = g.getOutEdges(v);
 			Iterator<Edge> iterator = edges.iterator();
 			while(iterator.hasNext()){
-				Vertex v2 = g.getDest(iterator.next());
-				if(v2.getDistance() > v.getDistance() + iterator.next().getWeight())
-					v2.setDistance(v.getDistance() + iterator.next().getWeight());
+				Edge e = iterator.next();
+				Vertex v2 = g.getDest(e);
+				if(v2.getDistance() > v.getDistance() + e.getWeight())
+					v2.setDistance(v.getDistance() + e.getWeight());
 				dQueue.update(v2);
 			}
 		}

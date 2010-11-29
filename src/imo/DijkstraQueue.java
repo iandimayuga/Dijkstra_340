@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+//Wrapper class for PriorityQueue
 public class DijkstraQueue {
 	
 	private Comparator<Vertex> comparator = new VertexComparator();
@@ -25,10 +26,16 @@ public class DijkstraQueue {
 		return pQueue.poll();
 	}
 	
+	//Look at the first value without removing
+	public Vertex peek(){
+		return pQueue.peek();
+	}
+	
 	public boolean hasMore(){
 		return !pQueue.isEmpty();
 	}
 	
+	//Have the queue reassess the position of a vertex in the graph
 	public void update(Vertex changeV){
 		pQueue.remove(changeV);
 		pQueue.add(changeV);

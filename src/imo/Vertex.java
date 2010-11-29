@@ -4,12 +4,13 @@ public class Vertex
 {
 	private String m_Name;
 	private boolean m_Final;
-	private int distance = Constants.infinity;
+	private int distance;
 	
 	public Vertex( String name)
 	{
 		m_Name = name;
 		m_Final = false;
+		distance = Constants.infinity;
 	}
 	
 	/**

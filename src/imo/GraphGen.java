@@ -162,7 +162,9 @@ public final class GraphGen
 			for( int repeat = 0; repeat <= i / 26; repeat++) {
 				name += String.valueOf( (char) ((i % 26) + 97));
 			}
-			ret.add( new Vertex( name));
+			Vertex v = new Vertex(name);
+			if(i == 0) v.setDistance( 0);
+			ret.add( v);
 		}
 		
 		return ret;

@@ -3,6 +3,7 @@ package imo;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Scanner;
 
 import edu.uci.ics.jung.graph.DelegateTree;
 import edu.uci.ics.jung.graph.Forest;
@@ -28,9 +29,10 @@ public class Dijkstra
 		vHigh = new ArrayList<Vertex>();
 		eHigh = new ArrayList<Edge>();
 		g = GraphGen.getGraph( 10, 1, 10);
-		display = new Display(g, null, vHigh, eHigh);
 		f = new DelegateTree<Vertex, Edge>();
 		dQueue = new DijkstraQueue( g.getVertices());
+		f.addVertex( dQueue.peek());
+		display = new Display(g, f, vHigh, eHigh);
 	}
 	
 	/*
@@ -41,10 +43,15 @@ public class Dijkstra
 	 */
 	public void run()
 	{
+		Scanner s = new Scanner(System.in);
 		while( dQueue.hasMore()) {
+			display.print();
+			System.out.println("Enter");
+			s.nextLine();
+			
 			Vertex v = dQueue.remove();
 			v.setFinal(true);
-			f.addVertex(v);
+			//f.addVertex(v);
 			
 			Collection<Edge> edges = g.getOutEdges( v);
 			Iterator<Edge> iterator = edges.iterator();
@@ -56,16 +63,15 @@ public class Dijkstra
 				//Get the current object out of the iterator
 				Edge e = iterator.next();
 				
-				long time = System.currentTimeMillis() + 1000;
-				while( System.currentTimeMillis() < time);
 				Vertex v2 = g.getDest(e);
 				
 				/* Only check the vertex if it has not been added to the tree.
 				 * After that update the vertex if it is now closer to the root
 				 * then it was before v was added to the tree.
 				 */
-				if(!v.isFinal() && v2.getDistance() > v.getDistance() + e.getWeight()){
+				if(!v2.isFinal() && v2.getDistance() > v.getDistance() + e.getWeight()){
 					v2.setDistance( v.getDistance() + e.getWeight());
+					System.out.println("Resolving");
 					eChosen = e;
 				}
 				//Even if a vertex has not been changed it may be in the wrong position
@@ -78,6 +84,8 @@ public class Dijkstra
 				eHigh.add(e);
 				
 				display.print();
+				System.out.println(v2.getDistance());
+				s.nextLine();
 			}
 			//Before adding edge to forest make sure that this edge is not the original
 			if(eChosen.getWeight() >= 0)

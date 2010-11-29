@@ -11,8 +11,9 @@ public class DijkstraMain
 	 */
 	public static void main( String[] args)
 	{
-		// TODO Go ahead and start here.
-		Graph<Vertex, Edge> g = new SparseGraph<Vertex, Edge>();
+		Dijkstra d = new Dijkstra();
+		d.build();
+		d.run();
 	}
 	
 }

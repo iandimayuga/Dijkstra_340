@@ -50,7 +50,8 @@ public class DisplayTest
 		
 		Graph<Vertex, Edge> rg = GraphGen.getGraph("resources/testgraph.csv");
 		
-		Display.print( rg, f, vHigh, eHigh);
+		Display d = new Display( rg, f, vHigh, eHigh);
+		d.print();
 	}
 	
 }

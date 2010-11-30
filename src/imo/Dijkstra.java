@@ -1,5 +1,6 @@
 package imo;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -28,7 +29,12 @@ public class Dijkstra
 		//g = new DirectedSparseGraph<Vertex, Edge>();
 		vHigh = new ArrayList<Vertex>();
 		eHigh = new ArrayList<Edge>();
-		g = GraphGen.getGraph( 10, 1, 10);
+		try {
+			g = GraphGen.getGraph("resources/TestGraph.csv");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		f = new DelegateTree<Vertex, Edge>();
 		dQueue = new DijkstraQueue( g.getVertices());
 		f.addVertex( dQueue.peek());
@@ -69,13 +75,14 @@ public class Dijkstra
 				 * After that update the vertex if it is now closer to the root
 				 * then it was before v was added to the tree.
 				 */
-				if(!v2.isFinal() && v2.getDistance() > v.getDistance() + e.getWeight()){
-					v2.setDistance( v.getDistance() + e.getWeight());
-					System.out.println("Resolving");
-					eChosen = e;
+				if(!v2.isFinal()){
+					if(v2.getDistance() > v.getDistance() + e.getWeight()){
+						v2.setDistance( v.getDistance() + e.getWeight());
+						System.out.println("Resolving");
+						eChosen = e;
+					}
+					dQueue.update(v2);
 				}
-				//Even if a vertex has not been changed it may be in the wrong position
-				dQueue.update(v2);
 
 				//highlight v and e
 				vHigh.clear();

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Paint;
 import java.util.Collection;
+import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,7 +14,6 @@ import org.apache.commons.collections15.Transformer;
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
-import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.Forest;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
@@ -26,39 +26,47 @@ public final class Display
 {
 	public static boolean DISPLAY = true;
 	
-	private static JFrame frame;
-	private static Layout<Vertex, Edge> graph;
-	private static Layout<Vertex, Edge> tree;
+	private JFrame frame;
+	private JPanel panel;
+	
+	private Layout<Vertex, Edge> graph;
+	private TreeLayout<Vertex, Edge> tree;
 	private BasicVisualizationServer<Vertex, Edge> left;
 	private BasicVisualizationServer<Vertex, Edge> right;
+	private Collection<Vertex> vHigh;
+	private Collection<Edge> eHigh;
+	
+	private Transformer<Vertex, Paint> vPaint = new Transformer<Vertex, Paint>()
+	{
+		public Paint transform( Vertex v)
+		{
+			if( vHigh.contains( v)) {
+				return Color.yellow;
+			} else if( v.isFinal()) {
+				return Color.green;
+			} else {
+				return Color.red;
+			}
+		}
+	};
+	
+	private Transformer<Edge, Paint> ePaint = new Transformer<Edge, Paint>()
+	{
+		public Paint transform( Edge e)
+		{
+			return eHigh.contains( e) ? Color.red : Color.black;
+		}
+	};
+	
+	private EdgeLabelRenderer eRend = new DefaultEdgeLabelRenderer( Color.red, false);
 	
 	public Display( Graph<Vertex, Edge> g, Forest<Vertex, Edge> f, final Collection<Vertex> vHigh, final Collection<Edge> eHigh)
 	{
 		if( DISPLAY) {
+			this.vHigh = vHigh;
+			this.eHigh = eHigh;
+			
 			graph = new ISOMLayout<Vertex, Edge>( g);
-			Transformer<Vertex, Paint> vPaint = new Transformer<Vertex, Paint>()
-			{
-				public Paint transform( Vertex v)
-				{
-					if( vHigh.contains( v)) {
-						return Color.yellow;
-					} else if( v.isFinal()) {
-						return Color.green;
-					} else {
-						return Color.red;
-					}
-				}
-			};
-			
-			Transformer<Edge, Paint> ePaint = new Transformer<Edge, Paint>()
-			{
-				public Paint transform( Edge e)
-				{
-					return eHigh.contains( e) ? Color.red : Color.black;
-				}
-			};
-			
-			EdgeLabelRenderer eRend = new DefaultEdgeLabelRenderer( Color.red, false);
 			
 			// left side
 			try {
@@ -98,6 +106,14 @@ public final class Display
 			left.setLocation( 0, 0);
 			
 			frame = new JFrame( "Dijkstra's Algorithm");
+			frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE);
+			// start frame
+			panel = new JPanel();
+			panel.add( left);
+			if( right != null) panel.add( right);
+			frame.getContentPane().add( panel);
+			frame.pack();
+			frame.setVisible( true);
 		}
 	}
 	
@@ -113,17 +129,39 @@ public final class Display
 	public void print()
 	{
 		if( DISPLAY) {
-			left.fireStateChanged();
-			if( right != null) right.fireStateChanged();
 			
-			// start frame
-			JPanel panel = new JPanel();
+			Scanner s = new Scanner( System.in);
+			if( tree != null) {
+				panel.remove( right);
+				
+				tree = new TreeLayout<Vertex, Edge>( (Forest<Vertex, Edge>) tree.getGraph());
+				
+				right = new BasicVisualizationServer<Vertex, Edge>( tree);
+				right.setPreferredSize( new Dimension( 600, 600));
+				
+				right.getRenderContext().setVertexFillPaintTransformer( vPaint);
+				right.getRenderContext().setEdgeDrawPaintTransformer( ePaint);
+				right.getRenderContext().setVertexLabelTransformer( new ToStringLabeller());
+				right.getRenderContext().setEdgeLabelTransformer( new ToStringLabeller());
+				right.getRenderContext().setEdgeLabelRenderer( eRend);
+				right.getRenderer().getVertexLabelRenderer().setPosition( Position.CNTR);
+				
+			}
+			
+			panel.remove( left);
+			left.fireStateChanged();
 			panel.add( left);
-			if( right != null) panel.add( right);
-			frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE);
-			frame.getContentPane().add( panel);
+			left.setLocation( 0, 0);
+			
+			if( right != null) {
+				panel.add( right);
+				right.setLocation( 600, 0);
+			}
+			
 			frame.pack();
 			frame.setVisible( true);
+			
+			s.nextLine();
 		}
 	}
 }

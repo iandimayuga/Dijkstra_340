@@ -22,6 +22,7 @@ public class Dijkstra
 		g = graph;
 		vHigh = new ArrayList<Vertex>();
 		eHigh = new ArrayList<Edge>();
+
 		f = new DelegateTree<Vertex, Edge>();
 		dQueue = new DijkstraQueue( g.getVertices());
 		f.addVertex( dQueue.peek());

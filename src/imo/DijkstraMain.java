@@ -12,7 +12,7 @@ public class DijkstraMain
 	public static void main( String[] args)
 	{
 		Dijkstra d = new Dijkstra();
-		d.build();
+		d.build("resources/Testing.csv");
 		d.run();
 	}
 	

@@ -23,13 +23,13 @@ public class Dijkstra
 	}
 	
 	//Build the graph here and then setup the Queue
-	public void build()
+	public void build(String csv)
 	{
 		//g = new DirectedSparseGraph<Vertex, Edge>();
 		vHigh = new ArrayList<Vertex>();
 		eHigh = new ArrayList<Edge>();
 		try {
-			g = GraphGen.getGraph( "resources/TestGraph.csv");
+			g = GraphGen.getGraph(csv);
 		} catch( FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

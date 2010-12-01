@@ -3,6 +3,8 @@ package imo;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Paint;
+import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
 import java.util.Collection;
 import java.util.Scanner;
 
@@ -25,9 +27,11 @@ import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 public final class Display
 {
 	public static boolean DISPLAY = true;
+	public static boolean INPUT = true;
 	
 	private JFrame frame;
 	private JPanel panel;
+	private Scanner s = new Scanner( System.in);
 	
 	private Layout<Vertex, Edge> graph;
 	private TreeLayout<Vertex, Edge> tree;
@@ -47,6 +51,15 @@ public final class Display
 			} else {
 				return Color.red;
 			}
+		}
+	};
+	
+	private Transformer<Vertex, Shape> vShape = new Transformer<Vertex, Shape>()
+	{
+		@Override
+		public Shape transform( Vertex arg0)
+		{
+			return new Ellipse2D.Float( -15, -15, 30, 30);
 		}
 	};
 	
@@ -80,7 +93,10 @@ public final class Display
 			left.setPreferredSize( new Dimension( 600, 600));
 			
 			left.getRenderContext().setVertexFillPaintTransformer( vPaint);
+			left.getRenderContext().setVertexShapeTransformer( vShape);
 			left.getRenderContext().setEdgeDrawPaintTransformer( ePaint);
+			left.getRenderContext().setArrowFillPaintTransformer( ePaint);
+			left.getRenderContext().setArrowDrawPaintTransformer( ePaint);
 			left.getRenderContext().setVertexLabelTransformer( new ToStringLabeller());
 			left.getRenderContext().setEdgeLabelTransformer( new ToStringLabeller());
 			left.getRenderContext().setEdgeLabelRenderer( eRend);
@@ -90,17 +106,9 @@ public final class Display
 			if( f != null) {
 				tree = new TreeLayout<Vertex, Edge>( f);
 				
-				right = new BasicVisualizationServer<Vertex, Edge>( tree);
-				right.setPreferredSize( new Dimension( 600, 600));
+				initRight();
 				
-				right.getRenderContext().setVertexFillPaintTransformer( vPaint);
-				right.getRenderContext().setEdgeDrawPaintTransformer( ePaint);
-				right.getRenderContext().setVertexLabelTransformer( new ToStringLabeller());
-				right.getRenderContext().setEdgeLabelTransformer( new ToStringLabeller());
-				right.getRenderContext().setEdgeLabelRenderer( eRend);
-				right.getRenderer().getVertexLabelRenderer().setPosition( Position.CNTR);
-				
-				right.setLocation( 600, 0);
+				right.setLocation( 0, 600);
 			}
 			
 			left.setLocation( 0, 0);
@@ -129,23 +137,10 @@ public final class Display
 	public void print()
 	{
 		if( DISPLAY) {
-			
-			Scanner s = new Scanner( System.in);
 			if( tree != null) {
 				panel.remove( right);
-				
 				tree = new TreeLayout<Vertex, Edge>( (Forest<Vertex, Edge>) tree.getGraph());
-				
-				right = new BasicVisualizationServer<Vertex, Edge>( tree);
-				right.setPreferredSize( new Dimension( 600, 600));
-				
-				right.getRenderContext().setVertexFillPaintTransformer( vPaint);
-				right.getRenderContext().setEdgeDrawPaintTransformer( ePaint);
-				right.getRenderContext().setVertexLabelTransformer( new ToStringLabeller());
-				right.getRenderContext().setEdgeLabelTransformer( new ToStringLabeller());
-				right.getRenderContext().setEdgeLabelRenderer( eRend);
-				right.getRenderer().getVertexLabelRenderer().setPosition( Position.CNTR);
-				
+				initRight();
 			}
 			
 			panel.remove( left);
@@ -155,13 +150,29 @@ public final class Display
 			
 			if( right != null) {
 				panel.add( right);
-				right.setLocation( 600, 0);
+				right.setLocation( 0, 600);
 			}
 			
 			frame.pack();
 			frame.setVisible( true);
 			
-			s.nextLine();
+			if( INPUT) s.nextLine();
 		}
+	}
+	
+	private void initRight()
+	{
+		right = new BasicVisualizationServer<Vertex, Edge>( tree);
+		right.setPreferredSize( new Dimension( 1200, 400));
+		
+		right.getRenderContext().setVertexFillPaintTransformer( vPaint);
+		right.getRenderContext().setVertexShapeTransformer( vShape);
+		right.getRenderContext().setEdgeDrawPaintTransformer( ePaint);
+		right.getRenderContext().setArrowFillPaintTransformer( ePaint);
+		right.getRenderContext().setArrowDrawPaintTransformer( ePaint);
+		right.getRenderContext().setVertexLabelTransformer( new ToStringLabeller());
+		right.getRenderContext().setEdgeLabelTransformer( new ToStringLabeller());
+		right.getRenderContext().setEdgeLabelRenderer( eRend);
+		right.getRenderer().getVertexLabelRenderer().setPosition( Position.CNTR);
 	}
 }

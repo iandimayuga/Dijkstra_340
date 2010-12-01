@@ -29,7 +29,8 @@ public class Dijkstra
 		vHigh = new ArrayList<Vertex>();
 		eHigh = new ArrayList<Edge>();
 		try {
-			g = GraphGen.getGraph(csv);
+			g = GraphGen.getGraph( "resources/AnotherGraph.csv");
+			//g = GraphGen.getGraph( 10, 1, 10);
 		} catch( FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -78,9 +79,8 @@ public class Dijkstra
 						eChosen = e;
 						v2.setDistance( v.getDistance() + e.getWeight());
 						if( f.containsVertex( v2)) {
-							Edge old = (Edge) f.getInEdges( v2).toArray()[0];
+							f.removeVertex( v2);
 							f.addEdge( eChosen, v, v2);
-							f.removeEdge( old);
 						} else {
 							f.addEdge( eChosen, v, v2);
 						}
@@ -92,6 +92,9 @@ public class Dijkstra
 			display.print();
 		}
 		System.out.println( "Finished");
+		vHigh.clear();
+		eHigh.clear();
+		display.print();
 	}
 	
 }

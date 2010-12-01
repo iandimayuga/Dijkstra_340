@@ -29,7 +29,7 @@ public class Dijkstra
 		vHigh = new ArrayList<Vertex>();
 		eHigh = new ArrayList<Edge>();
 		try {
-			g = GraphGen.getGraph( "resources/AnotherGraph.csv");
+			g = GraphGen.getGraph(csv);
 			//g = GraphGen.getGraph( 10, 1, 10);
 		} catch( FileNotFoundException e) {
 			// TODO Auto-generated catch block

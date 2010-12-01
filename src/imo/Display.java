@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
 
-import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.graph.Forest;
@@ -79,7 +79,7 @@ public final class Display
 			this.vHigh = vHigh;
 			this.eHigh = eHigh;
 			
-			graph = new ISOMLayout<Vertex, Edge>( g);
+			graph = new FRLayout<Vertex, Edge>( g);
 			
 			// left side
 			try {
@@ -108,7 +108,7 @@ public final class Display
 				
 				initRight();
 				
-				right.setLocation( 0, 600);
+				right.setLocation( 600, 0);
 			}
 			
 			left.setLocation( 0, 0);
@@ -150,7 +150,7 @@ public final class Display
 			
 			if( right != null) {
 				panel.add( right);
-				right.setLocation( 0, 600);
+				right.setLocation( 600, 0);
 			}
 			
 			frame.pack();
@@ -163,7 +163,7 @@ public final class Display
 	private void initRight()
 	{
 		right = new BasicVisualizationServer<Vertex, Edge>( tree);
-		right.setPreferredSize( new Dimension( 1200, 400));
+		right.setPreferredSize( new Dimension( 1200, 600));
 		
 		right.getRenderContext().setVertexFillPaintTransformer( vPaint);
 		right.getRenderContext().setVertexShapeTransformer( vShape);

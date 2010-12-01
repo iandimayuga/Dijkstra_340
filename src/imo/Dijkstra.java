@@ -1,6 +1,5 @@
 package imo;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -18,23 +17,11 @@ public class Dijkstra
 	private ArrayList<Edge> eHigh;
 	private Forest<Vertex, Edge> f;
 	
-	public Dijkstra()
+	public Dijkstra( Graph<Vertex, Edge> graph)
 	{
-	}
-	
-	//Build the graph here and then setup the Queue
-	public void build()
-	{
-		//g = new DirectedSparseGraph<Vertex, Edge>();
+		g = graph;
 		vHigh = new ArrayList<Vertex>();
 		eHigh = new ArrayList<Edge>();
-		try {
-			g = GraphGen.getGraph( "resources/AnotherGraph.csv");
-			//g = GraphGen.getGraph( 10, 1, 10);
-		} catch( FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		f = new DelegateTree<Vertex, Edge>();
 		dQueue = new DijkstraQueue( g.getVertices());
 		f.addVertex( dQueue.peek());
@@ -87,11 +74,16 @@ public class Dijkstra
 					}
 					dQueue.update( v2);
 				}
+				
+				//highlight v and e
+				vHigh.clear();
+				vHigh.add( v);
+				eHigh.clear();
+				eHigh.add( e);
+				
+				display.print();
 			}
-			
-			display.print();
 		}
-		System.out.println( "Finished");
 		vHigh.clear();
 		eHigh.clear();
 		display.print();

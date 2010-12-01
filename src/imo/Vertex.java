@@ -61,7 +61,7 @@ public class Vertex
 	@Override
 	public String toString()
 	{
-		return this.getName() + "(" + (this.getDistance() == Constants.infinity ? "∞" : this.getDistance()) + ")";
+		return this.getName() + "(" + (this.getDistance() >= Constants.infinity ? "\u221E" : this.getDistance()) + ")";
 	}
 	
 	public void setDistance(int i){
